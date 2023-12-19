@@ -7,10 +7,17 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "node src/server.js",
-    "build": "tsup src --out-dir build"
+    "build": "tsup src --out-dir build",
+    "lint": "eslint src --ext .ts --fix",
+    "format": "prettier src --write"
   },
   "devDependencies": {
     "@types/node": "20.10.5",
+    "@typescript-eslint/eslint-plugin": "6.15.0",
+    "@typescript-eslint/parser": "6.15.0",
+    "eslint": "8.56.0",
+    "eslint-config-prettier": "9.1.0",
+    "prettier": "3.1.1",
     "tsup": "8.0.1",
     "tsx": "4.7.0",
     "typescript": "5.3.3"
