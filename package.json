@@ -3,5 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "Leonardo Henrique <leonardo0507.business@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "start": "node src/server.js",
+    "build": "tsup src --out-dir build"
+  },
+  "devDependencies": {
+    "@types/node": "20.10.5",
+    "tsup": "8.0.1",
+    "tsx": "4.7.0",
+    "typescript": "5.3.3"
+  }
 }
