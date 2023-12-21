@@ -1,20 +1,25 @@
-import { Knex } from "knex";
+import "knex";
 
 declare module "knex/types/tables" {
-  interface Food {
-    id: string;
-    session_id: string;
-    name: string;
-    description: string;
-    in_diet: boolean;
-    created_at: string;
-  }
-
   interface Tables {
-    foods: Knex.CompositeTableType<
-      Food,
-      Omit<Food, "id" | "created_at">,
-      Partial<Omit<Food, "id" | "session_id">>
-    >;
+    users: {
+      id: string;
+      sessionId: string | null;
+      sessionIdExpiration: number | null;
+      email: string;
+      passwordHash: string;
+      name: string;
+      createdAt: Date;
+      updatedAt: Date;
+    };
+
+    foods: {
+      id: string;
+      userId: string;
+      name: string;
+      description: string;
+      inDiet: boolean;
+      createdAt: Date;
+    };
   }
 }
