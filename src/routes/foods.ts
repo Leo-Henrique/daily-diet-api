@@ -104,4 +104,42 @@ export async function foodRoutes(app: FastifyInstance) {
       res.code(204).send();
     },
   );
+
+  app.get("/metrics", { preHandler: [session] }, async (req, res) => {
+    const { authUserId } = req;
+
+    const foods = await database("foods")
+      .where({ userId: authUserId })
+      .orderBy("createdAt");
+
+    const foodsInDiet = await database("foods")
+      .where({ userId: authUserId, inDiet: true })
+      .count("*", { as: "total" })
+      .first();
+
+    const foodsNotInDiet = await database("foods")
+      .where({ userId: authUserId, inDiet: false })
+      .count("*", { as: "total" })
+      .first();
+
+    const { bestInDietSequence } = foods.reduce(
+      (acc, { inDiet }) => {
+        if (inDiet) acc.currentSequence += 1;
+        else acc.currentSequence = 0;
+
+        if (acc.currentSequence > acc.bestInDietSequence)
+          acc.bestInDietSequence = acc.currentSequence;
+
+        return acc;
+      },
+      { bestInDietSequence: 0, currentSequence: 0 },
+    );
+
+    res.send({
+      totalFoods: foods.length,
+      totalFoodsInDiet: Number(foodsInDiet?.total),
+      totalFoodsNotInDiet: Number(foodsNotInDiet?.total),
+      bestInDietSequence,
+    });
+  });
 }
