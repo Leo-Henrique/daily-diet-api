@@ -18,7 +18,16 @@ export async function session(req: FastifyRequest, res: FastifyReply) {
   if (!user || !user.sessionIdExpiration)
     return res.code(401).send({ error: "Invalid session id." });
 
-  if (Date.now() > user.sessionIdExpiration)
+  const expirationTime = () => {
+    // SQlite
+    if (typeof user.sessionIdExpiration === "number")
+      return user.sessionIdExpiration;
+
+    // Postgres
+    return user.sessionIdExpiration!.getTime();
+  };
+
+  if (Date.now() > expirationTime())
     return res.code(401).send({ error: "Session id expired." });
 
   req.authUserId = user.id;

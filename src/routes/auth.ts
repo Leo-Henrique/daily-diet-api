@@ -59,7 +59,7 @@ export async function authRoutes(app: FastifyInstance) {
         .where({ id: user.id })
         .update({
           sessionId,
-          sessionIdExpiration: Date.now() + sessionIdDuration,
+          sessionIdExpiration: new Date(Date.now() + sessionIdDuration),
         })
         .returning("*");
 

@@ -4,7 +4,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable("users", table => {
     table.uuid("id").primary().defaultTo(knex.fn.uuid());
     table.uuid("sessionId");
-    table.integer("sessionIdExpiration");
+    table.timestamp("sessionIdExpiration");
     table.string("email").unique().notNullable();
     table.string("passwordHash").notNullable();
     table.string("name").notNullable();
