@@ -1,42 +1,14 @@
-import { execSync } from "node:child_process";
-import { unlinkSync } from "node:fs";
-import { join } from "node:path";
 import request from "supertest";
-import {
-  afterAll,
-  afterEach,
-  beforeAll,
-  beforeEach,
-  describe,
-  expect,
-  it,
-} from "vitest";
+import { describe, expect, it } from "vitest";
 import { app } from "../src/app";
-import { env } from "../src/env";
 
-beforeAll(() => app.ready());
-afterAll(async () => {
-  await app.close();
-
-  if (env.DATABASE_CLIENT === "sqlite3")
-    unlinkSync(join(__dirname, "..", env.DATABASE_URL));
-});
-
-beforeEach(() => {
-  execSync("yarn knex migrate:latest");
-});
-
-afterEach(() => {
-  execSync("yarn knex migrate:rollback --all");
-});
+const user = {
+  name: "Léo",
+  email: "leo@gmail.com",
+  password: "123",
+};
 
 describe("auth routes", () => {
-  const user = {
-    name: "Léo",
-    email: "leo@gmail.com",
-    password: "123",
-  };
-
   it("should be able to register a user", async () => {
     await request(app.server)
       .post("/auth/sign-up")
